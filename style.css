@@ -1,10 +1,9 @@
-/* Створено: 14.11.2026, 17:00 */
+/* Створено: 14.11.2026, 18:05 */
 
 :root {
     --bg-color: #000000;
-    --pixel-red: #ff0055; /* Яскравий червоний колір для рамок та акцентів */
+    --pixel-red: #ff0055;
     --pixel-text: #ffffff;
-    --box-shadow-pixel: 0 0 0 2px var(--pixel-red), inset 0 0 0 2px var(--pixel-red);
 }
 
 @font-face {
@@ -48,7 +47,6 @@ body {
 
 .score-board { color: var(--pixel-red); }
 
-/* Кнопка перемикання режимів */
 .pixel-mode-btn {
     background: var(--pixel-red);
     color: var(--bg-color);
@@ -66,7 +64,7 @@ body {
     width: 100%;
     overflow: hidden;
     background-color: #111;
-    cursor: pointer; /* Показує, що сюди можна тикнути пальцем */
+    cursor: pointer;
 }
 
 #webcam {
@@ -74,30 +72,27 @@ body {
     height: 100%;
     object-fit: cover;
     transform: scaleX(-1);
-    /* Жодних зелених фільтрів — чисте природне світло */
 }
 
-/* Червона рамка */
+/* Компактна піксельна рамка, яка точно повторює форму предмета */
 #detection-box {
     position: absolute;
-    border: 4px solid var(--pixel-red);
-    box-shadow: var(--box-shadow-pixel);
+    border: 3px solid;
     pointer-events: none;
     z-index: 5;
-    transition: all 0.05s linear;
-    background: rgba(255, 0, 85, 0.15); /* Легке червоне напівпрозоре заповнення */
+    transition: all 0.04s ease-out; /* Швидке реагування без затримок */
 }
 
 #box-label {
     position: absolute;
-    top: -22px;
+    top: -20px;
     left: -2px;
-    background-color: var(--pixel-red);
-    color: var(--bg-color);
-    font-size: 0.55rem;
-    padding: 3px 6px;
+    color: #000000;
+    font-size: 0.5rem;
+    padding: 2px 4px;
     text-transform: uppercase;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 .hidden-box { display: none !important; }
