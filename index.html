@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <!-- Створено: 13.11.2026, 22:10 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ПІКСЕЛЬ-СКАНЕР</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+</head>
+<body>
+
+    <div class="game-wrapper">
+        <header class="header-panel">
+            <div class="score-board">ОЧКИ: <span id="score-value">0</span></div>
+            <div class="mission-status" id="mission-text">СКАHУВАHНЯ...</div>
+        </header>
+
+        <div class="camera-container">
+            <video id="webcam" autoplay playsinline muted></video>
+            <!-- Піксельна рамка -->
+            <div id="detection-box" class="hidden-box">
+                <span id="box-label">ЦІЛЬ</span>
+            </div>
+        </div>
+
+        <footer class="footer-controls">
+            <div id="result-display">ЗАПУСК ШІ...</div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

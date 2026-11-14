@@ -1,0 +1,115 @@
+/* Створено: 13.11.2026, 22:10 */
+
+:root {
+    --bg-color: #000000; /* Чистий чорний */
+    --pixel-green: #39ff14; /* Яскравий зелений (фосфор) */
+    --pixel-dark-green: #006600; /* Тіні */
+    --box-shadow-pixel: 0 0 0 2px var(--pixel-green), inset 0 0 0 2px var(--pixel-green);
+}
+
+/* Підключення піксельного шрифту (або використовуємо Courier New як альтернативу) */
+@font-face {
+    font-family: 'PressStart2P';
+    src: url('https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK0nPVbY.woff2') format('woff2');
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'PressStart2P', 'Courier New', monospace; /* Піксельний шрифт як пріоритет */
+    image-rendering: pixelated; /* Щоб картинка з камери виглядала трохи "квадратною" */
+    image-rendering: crisp-edges;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--pixel-green);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    border: 4px solid var(--pixel-green); /* Рамка екрана */
+}
+
+.header-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--bg-color);
+    border-bottom: 2px solid var(--pixel-green);
+    font-size: 0.8rem; /* Дрібний піксельний текст */
+}
+
+.score-board { color: var(--pixel-green); }
+.mission-status { color: var(--pixel-green); animation: blink 1s infinite; }
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.camera-container {
+    position: relative;
+    flex-grow: 1;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+#webcam {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%);
+    /* Фільтр для надання відео зеленого відтінку (ефект монохромного монітора) */
+}
+
+/* Піксельна рамка авто-радара */
+#detection-box {
+    position: absolute;
+    border: 4px solid var(--pixel-green);
+    box-shadow: var(--box-shadow-pixel);
+    pointer-events: none;
+    z-index: 5;
+    transition: all 0.05s linear; /* Різке, "цифрове" переміщення */
+    background: rgba(0, 255, 20, 0.1); /* Легке зелене заповнення */
+}
+
+#box-label {
+    position: absolute;
+    top: -20px;
+    left: -2px;
+    background-color: var(--pixel-green);
+    color: var(--bg-color);
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    text-transform: uppercase;
+}
+
+.hidden-box { display: none !important; }
+
+.footer-controls {
+    padding: 10px;
+    background: var(--bg-color);
+    border-top: 2px solid var(--pixel-green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-align: center;
+    min-height: 50px;
+}
+
+#result-display {
+    font-size: 0.7rem;
+    color: var(--pixel-green);
+    text-shadow: none;
+}
