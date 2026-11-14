@@ -1,16 +1,19 @@
-// Створено: 13.11.2026, 22:10
+// Створено: 14.11.2026, 17:00
 
 const video = document.getElementById('webcam');
 const resultDisplay = document.getElementById('result-display');
 const detectionBox = document.getElementById('detection-box');
 const boxLabel = document.getElementById('box-label');
 const scoreValue = document.getElementById('score-value');
+const modeBtn = document.getElementById('mode-btn');
+const cameraContainer = document.getElementById('camera-container');
 
 let model = undefined;
 let currentScore = 0;
 let isAnalyzing = false;
+let currentMode = 'AUTO'; // Режими: 'AUTO' або 'CLICK'
 
-// 1. Словник перекладів (Український, мінімальний)
+// Словник перекладів
 const ukrainianPixelLabels = {
     'car': 'МАШИНА 🚗',
     'truck': 'ВАНТАЖ 🚚',
@@ -50,8 +53,7 @@ async function loadAI() {
     resultDisplay.innerText = "ЗАВАНТАЖЕННЯ ШІ...";
     try {
         model = await cocoSsd.load({base: 'lite_mobilenet_v2'});
-        resultDisplay.innerText = "СКАНЕР ГОТОВИЙ";
-        startPixelRadar();
+        resultDisplay.innerText = "ГОТОВО! ОБЕРІТЬ РЕЖИМ";
     } catch (err) {
         console.error("Помилка моделі:", err);
         resultDisplay.innerText = "ПОМИЛКА ШІ";
@@ -66,45 +68,88 @@ async function init() {
 
 init();
 
-// 3. Цикл авто-радара (Pixel версія)
-function startPixelRadar() {
-    setInterval(async () => {
-        if (!model || isAnalyzing || video.readyState !== 4) return;
+// 3. Кнопка перемикання режимів
+modeBtn.addEventListener('click', () => {
+    if (currentMode === 'AUTO') {
+        currentMode = 'CLICK';
+        modeBtn.innerText = "РЕЖИМ: ТОРКНУТИСЬ";
+        resultDisplay.innerText = "Торкніться екрана для сканування";
+        hidePixelDetectionBox();
+    } else {
+        currentMode = 'AUTO';
+        modeBtn.innerText = "РЕЖИМ: АВТО";
+        resultDisplay.innerText = "Автоматичний радар активний";
+    }
+});
 
-        isAnalyzing = true;
+// 4. Режим 1: Автоматичний цикл радара
+setInterval(async () => {
+    if (currentMode !== 'AUTO' || !model || isAnalyzing || video.readyState !== 4) return;
 
-        try {
-            const predictions = await model.detect(video);
+    isAnalyzing = true;
+    try {
+        const predictions = await model.detect(video);
+        if (predictions.length > 0) {
+            const target = predictions[0];
+            const confidence = Math.round(target.score * 100);
 
-            if (predictions.length > 0) {
-                const target = predictions[0];
-                const confidence = Math.round(target.score * 100);
+            if (confidence > 65) {
+                const rawClass = target.class.toLowerCase();
+                const translatedName = ukrainianPixelLabels[rawClass] || target.class;
 
-                if (confidence > 70) {
-                    const rawClass = target.class.toLowerCase();
-                    const translatedName = ukrainianPixelLabels[rawClass] || target.class;
-
-                    resultDisplay.innerText = `ВИЯВЛЕНО: ${translatedName} (${confidence}%)`;
-                    drawPixelDetectionBox(target.bbox, `${translatedName} ${confidence}%`);
-                    
-                    currentScore += 10; // Більше очок для піксельного стилю
-                    scoreValue.innerText = currentScore;
-                } else {
-                    hidePixelDetectionBox();
-                }
+                resultDisplay.innerText = `ЗНАЙДЕНО: ${translatedName} (${confidence}%)`;
+                drawPixelDetectionBox(target.bbox, `${translatedName} ${confidence}%`);
+                
+                currentScore += 5;
+                scoreValue.innerText = currentScore;
             } else {
                 hidePixelDetectionBox();
-                resultDisplay.innerText = "СКАНУВАННЯ ПРОСТОРУ...";
             }
-        } catch (err) {
-            console.error("Помилка сканування:", err);
-        } finally {
-            isAnalyzing = false;
+        } else {
+            hidePixelDetectionBox();
+            resultDisplay.innerText = "АВТО-СКАНУВАННЯ ПРОСТОРУ...";
         }
-    }, 750); // Сканування трохи повільніше для "лампового" ефекту
-}
+    } catch (err) {
+        console.error("Помилка сканування:", err);
+    } finally {
+        isAnalyzing = false;
+    }
+}, 800);
 
-// Функції управління рамкою (Pixel версія)
+// 5. Режим 2: Сканування при торканні (клику) екрана пальцем
+cameraContainer.addEventListener('click', async () => {
+    if (currentMode !== 'CLICK' || !model || isAnalyzing) return;
+
+    isAnalyzing = true;
+    resultDisplay.innerText = "АНАЛІЗ ТОЧКИ ТОРКАННЯ...";
+    hidePixelDetectionBox();
+
+    try {
+        const predictions = await model.detect(video);
+        if (predictions.length > 0) {
+            // Беремо найближчий або перший ліпший об'єкт з кадру
+            const target = predictions[0];
+            const confidence = Math.round(target.score * 100);
+            const rawClass = target.class.toLowerCase();
+            const translatedName = ukrainianPixelLabels[rawClass] || target.class;
+
+            resultDisplay.innerText = `УСПІХ! ${translatedName} (${confidence}%)`;
+            drawPixelDetectionBox(target.bbox, `${translatedName} ${confidence}%`);
+            
+            currentScore += 15; // Більше очок за ручне сканування
+            scoreValue.innerText = currentScore;
+        } else {
+            resultDisplay.innerText = "НІЧОГО НЕ ЗНАЙДЕНО В ЦІЙ ЗОНІ";
+        }
+    } catch (err) {
+        console.error("Помилка кліку:", err);
+        resultDisplay.innerText = "ПОМИЛКА АНАЛІЗУ";
+    } finally {
+        isAnalyzing = false;
+    }
+});
+
+// Функції малювання червоної рамки
 function drawPixelDetectionBox(bbox, text) {
     const [x, y, width, height] = bbox;
     detectionBox.style.left = `${x}px`;
