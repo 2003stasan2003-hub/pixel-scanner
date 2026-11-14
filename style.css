@@ -1,13 +1,12 @@
-/* Створено: 13.11.2026, 22:10 */
+/* Створено: 14.11.2026, 17:00 */
 
 :root {
-    --bg-color: #000000; /* Чистий чорний */
-    --pixel-green: #39ff14; /* Яскравий зелений (фосфор) */
-    --pixel-dark-green: #006600; /* Тіні */
-    --box-shadow-pixel: 0 0 0 2px var(--pixel-green), inset 0 0 0 2px var(--pixel-green);
+    --bg-color: #000000;
+    --pixel-red: #ff0055; /* Яскравий червоний колір для рамок та акцентів */
+    --pixel-text: #ffffff;
+    --box-shadow-pixel: 0 0 0 2px var(--pixel-red), inset 0 0 0 2px var(--pixel-red);
 }
 
-/* Підключення піксельного шрифту (або використовуємо Courier New як альтернативу) */
 @font-face {
     font-family: 'PressStart2P';
     src: url('https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK0nPVbY.woff2') format('woff2');
@@ -17,14 +16,12 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'PressStart2P', 'Courier New', monospace; /* Піксельний шрифт як пріоритет */
-    image-rendering: pixelated; /* Щоб картинка з камери виглядала трохи "квадратною" */
-    image-rendering: crisp-edges;
+    font-family: 'PressStart2P', 'Courier New', monospace;
 }
 
 body {
     background-color: var(--bg-color);
-    color: var(--pixel-green);
+    color: var(--pixel-text);
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -36,23 +33,31 @@ body {
     height: 100%;
     width: 100%;
     justify-content: space-between;
-    border: 4px solid var(--pixel-green); /* Рамка екрана */
+    border: 4px solid var(--pixel-red);
 }
 
 .header-panel {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px;
     background: var(--bg-color);
-    border-bottom: 2px solid var(--pixel-green);
-    font-size: 0.8rem; /* Дрібний піксельний текст */
+    border-bottom: 2px solid var(--pixel-red);
+    font-size: 0.75rem;
 }
 
-.score-board { color: var(--pixel-green); }
-.mission-status { color: var(--pixel-green); animation: blink 1s infinite; }
+.score-board { color: var(--pixel-red); }
 
-@keyframes blink {
-    50% { opacity: 0; }
+/* Кнопка перемикання режимів */
+.pixel-mode-btn {
+    background: var(--pixel-red);
+    color: var(--bg-color);
+    border: none;
+    padding: 6px 10px;
+    font-size: 0.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
 }
 
 .camera-container {
@@ -60,7 +65,8 @@ body {
     flex-grow: 1;
     width: 100%;
     overflow: hidden;
-    background-color: #000;
+    background-color: #111;
+    cursor: pointer; /* Показує, що сюди можна тикнути пальцем */
 }
 
 #webcam {
@@ -68,38 +74,38 @@ body {
     height: 100%;
     object-fit: cover;
     transform: scaleX(-1);
-    filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%);
-    /* Фільтр для надання відео зеленого відтінку (ефект монохромного монітора) */
+    /* Жодних зелених фільтрів — чисте природне світло */
 }
 
-/* Піксельна рамка авто-радара */
+/* Червона рамка */
 #detection-box {
     position: absolute;
-    border: 4px solid var(--pixel-green);
+    border: 4px solid var(--pixel-red);
     box-shadow: var(--box-shadow-pixel);
     pointer-events: none;
     z-index: 5;
-    transition: all 0.05s linear; /* Різке, "цифрове" переміщення */
-    background: rgba(0, 255, 20, 0.1); /* Легке зелене заповнення */
+    transition: all 0.05s linear;
+    background: rgba(255, 0, 85, 0.15); /* Легке червоне напівпрозоре заповнення */
 }
 
 #box-label {
     position: absolute;
-    top: -20px;
+    top: -22px;
     left: -2px;
-    background-color: var(--pixel-green);
+    background-color: var(--pixel-red);
     color: var(--bg-color);
-    font-size: 0.6rem;
-    padding: 2px 4px;
+    font-size: 0.55rem;
+    padding: 3px 6px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .hidden-box { display: none !important; }
 
 .footer-controls {
-    padding: 10px;
+    padding: 12px;
     background: var(--bg-color);
-    border-top: 2px solid var(--pixel-green);
+    border-top: 2px solid var(--pixel-red);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,7 +115,6 @@ body {
 }
 
 #result-display {
-    font-size: 0.7rem;
-    color: var(--pixel-green);
-    text-shadow: none;
+    font-size: 0.65rem;
+    color: var(--pixel-text);
 }
