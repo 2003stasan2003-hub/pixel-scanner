@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <!-- Створено: 13.11.2026, 22:10 -->
+    <!-- Створено: 14.11.2026, 17:00 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ПІКСЕЛЬ-СКАНЕР</title>
@@ -14,19 +14,21 @@
     <div class="game-wrapper">
         <header class="header-panel">
             <div class="score-board">ОЧКИ: <span id="score-value">0</span></div>
-            <div class="mission-status" id="mission-text">СКАHУВАHНЯ...</div>
+            <!-- Кнопка перемикання режимів -->
+            <button id="mode-btn" class="pixel-mode-btn">РЕЖИМ: АВТО</button>
         </header>
 
-        <div class="camera-container">
+        <!-- Вікно камери з підтримкою кліку/торкання -->
+        <div class="camera-container" id="camera-container">
             <video id="webcam" autoplay playsinline muted></video>
-            <!-- Піксельна рамка -->
+            <!-- Червона піксельна рамка -->
             <div id="detection-box" class="hidden-box">
                 <span id="box-label">ЦІЛЬ</span>
             </div>
         </div>
 
         <footer class="footer-controls">
-            <div id="result-display">ЗАПУСК ШІ...</div>
+            <div id="result-display">ІНІЦІАЛІЗАЦІЯ...</div>
         </footer>
     </div>
 
