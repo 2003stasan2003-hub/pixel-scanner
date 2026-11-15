@@ -1,33 +1,49 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <!-- Створено: 14.11.2026, 18:05 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ПІКСЕЛЬ-СКАНЕР</title>
+    <title>AI Vision Scanner</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 </head>
 <body>
 
-    <div class="game-wrapper">
-        <header class="header-panel">
-            <div class="score-board">ОЧКИ: <span id="score-value">0</span></div>
-            <button id="mode-btn" class="pixel-mode-btn">РЕЖИМ: АВТО</button>
-        </header>
-
-        <div class="camera-container" id="camera-container">
-            <video id="webcam" autoplay playsinline muted></video>
-            <!-- Компактна рамка об'єкта -->
-            <div id="detection-box" class="hidden-box">
-                <span id="box-label">ЦІЛЬ</span>
+    <div class="app-container">
+        <!-- Сайдбар / Бокова панель -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>МЕНЮ</h3>
+                <button id="close-sidebar" class="icon-btn">&times;</button>
             </div>
-        </div>
+            <div class="sidebar-content">
+                <div class="stat-item">РАХУНОК: <span id="score-value">0</span></div>
+                <div class="stat-item">РЕЖИМ: <span id="mode-status">АКТИВНИЙ</span></div>
+                <button id="toggle-mode-btn" class="sidebar-btn">Змінити режим</button>
+                <button id="save-photo-btn" class="sidebar-btn">Зробити фото</button>
+            </div>
+        </aside>
 
-        <footer class="footer-controls">
-            <div id="result-display">ІНІЦІАЛІЗАЦІЯ...</div>
-        </footer>
+        <!-- Головна робоча зона -->
+        <main class="main-screen">
+            <header class="top-bar">
+                <button id="open-sidebar" class="menu-btn">&#9776;</button>
+                <div class="app-title">AI VISION STREAM</div>
+                <div class="zoom-control">
+                    <button id="zoom-in-btn" class="zoom-btn">ZOOM +</button>
+                </div>
+            </header>
+
+            <div class="camera-wrapper" id="camera-container">
+                <video id="webcam" autoplay playsinline muted></video>
+                <div id="boxes-container"></div>
+            </div>
+
+            <footer class="bottom-bar">
+                <div id="result-display">Ініціалізація системи...</div>
+            </footer>
+        </main>
     </div>
 
     <script src="app.js"></script>
